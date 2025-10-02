@@ -1,0 +1,58 @@
+/* frontend/src/components/KPI_Card.css */
+.kpi-card {
+  background-color: var(--secondary-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-grow: 1;
+  border-left: 4px solid var(--accent-color);
+}
+
+.kpi-icon {
+  font-size: 2rem;
+  color: var(--accent-color);
+}
+
+.kpi-content {
+  text-align: right;
+}
+
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.kpi-title {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+@media (min-width: 768px) {
+  .kpi-card {
+    /* در حالت افقی، محتوا به صورت ستونی بهتر دیده می‌شه */
+    flex-direction: column;
+    align-items: flex-start; /* آیتم‌ها را از چپ تراز می‌کند */
+    padding: 1rem; /* پدینگ داخلی را کمی کمتر می‌کنیم */
+  }
+
+  .kpi-icon {
+    /* اندازه آیکون را کمی کوچک‌تر می‌کنیم */
+    font-size: 1.75rem;
+  }
+
+  .kpi-value {
+    /* اندازه عدد اصلی را کمی کوچک‌تر می‌کنیم */
+    font-size: 1.5rem;
+  }
+
+  .kpi-title {
+    /* اندازه عنوان را کمی کوچک‌تر می‌کنیم */
+    font-size: 0.85rem;
+  }
+}

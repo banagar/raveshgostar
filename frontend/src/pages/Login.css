@@ -1,0 +1,113 @@
+/* frontend/src/pages/Login.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /*padding: 2rem;*/
+}
+
+.login-form-wrapper {
+  background-color: var(--secondary-bg);
+  padding: 2.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.login-form-wrapper h2 {
+  margin-bottom: 0.5rem;
+}
+
+.login-form-wrapper p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  text-align: right;
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--card-bg);
+  border-radius: 4px;
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+  font-family: 'Vazirmatn';
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: var(--accent-hover);
+}
+
+.error-message {
+  color: #e53e3e;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.login-links {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.login-links a {
+  margin: 0 0.5rem;
+}
+
+/* استایل‌های واکنش‌گرا برای تبلت‌ها و صفحه‌های با ارتفاع کم 
+  اگر ارتفاع صفحه نمایش کمتر از 720 پیکسل باشد، این استایل‌ها اعمال می‌شوند
+*/
+@media (max-height: 720px) {
+  .login-form-wrapper {
+    /* پدینگ عمودی رو کم می‌کنیم ولی افقی رو دست نمی‌زنیم */
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .login-form-wrapper p {
+    /* فاصله زیر پاراگراف توضیحات رو کمتر می‌کنیم */
+    margin-bottom: 1rem;
+  }
+
+  .input-group {
+    /* فاصله بین گروه‌های ورودی رو کمتر می‌کنیم */
+    margin-bottom: 1rem;
+  }
+  
+  .input-group input, .login-button {
+    /* پدینگ داخلی دکمه و اینپوت‌ها رو کمی کمتر می‌کنیم تا ارتفاعشون کمتر بشه */
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .login-links {
+    /* فاصله بالای لینک‌های فراموشی رمز و ثبت‌نام رو کم می‌کنیم */
+    margin-top: 1rem;
+  }
+}

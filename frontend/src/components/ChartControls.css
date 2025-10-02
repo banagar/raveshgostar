@@ -1,0 +1,41 @@
+.chart-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--primary-bg);
+  padding: 0.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.control-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-family: 'Vazirmatn';
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.control-button.active {
+  background-color: var(--secondary-bg);
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* استایل‌های واکنش‌گرا برای موبایل */
+@media (max-width: 768px) {
+  .control-button {
+    /* کاهش پدینگ داخلی برای کوچکتر شدن دکمه */
+    padding: 0.3rem 0.6rem;
+    
+    /* کاهش اندازه فونت */
+    font-size: 0.8rem;
+  }
+}

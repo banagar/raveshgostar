@@ -1,0 +1,32 @@
+/* frontend/src/components/FloatingActionButton.css */
+.fab {
+  position: fixed;
+  bottom: 80px; /* بالاتر از منوی پایینی موبایل */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: 1050;
+  transition: background-color 0.2s;
+}
+
+.fab:hover {
+  background-color: var(--accent-hover);
+}
+
+/* در صفحات بزرگتر از موبایل، این دکمه را مخفی کن */
+@media (min-width: 769px) {
+  .fab {
+    display: none;
+  }
+}

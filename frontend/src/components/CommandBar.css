@@ -1,0 +1,48 @@
+.command-bar {
+  display: none; /* در حالت پیش‌فرض (موبایل) مخفی است */
+  width: 100%;
+  background-color: var(--secondary-bg);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  cursor: text;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--secondary-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.command-bar:hover {
+  border-color: var(--accent-color);
+}
+
+/* این مدیا کوئری باعث می‌شود نوار فقط در تبلت و دسکتاپ نمایش داده شود */
+@media (min-width: 769px) {
+  .command-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.command-bar-placeholder {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.command-bar-button {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.command-bar-button:hover {
+  background-color: var(--card-bg);
+}

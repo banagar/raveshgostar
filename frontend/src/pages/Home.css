@@ -1,0 +1,40 @@
+/* frontend/src/pages/Home.css */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.home-header h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.home-header p {
+  color: var(--text-secondary);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.command-bar-wrapper {
+  margin-top: 1.5rem;
+}
+
+/* برای تبلت: دو ستون */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* برای دسکتاپ: سه ستون */
+@media (min-width: 1200px) {
+  .kpi-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

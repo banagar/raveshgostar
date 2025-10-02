@@ -1,0 +1,57 @@
+/* frontend/src/index.css */
+/* Import Vazirmatn Font */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('./assets/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --primary-bg: #1A202C;
+  --secondary-bg: #2D3748;
+  --card-bg: #4A5568;
+  --text-primary: #EDF2F7;
+  --text-secondary: #A0AEC0;
+  --accent-color: #38A169; /* سبز زمردی */
+  --accent-hover: #2F855A;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+  direction: rtl; /* راست‌چین کردن کل برنامه */
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* کلاس جدید برای نمایش المان فقط در موبایل */
+.mobile-only-title {
+  display: block; /* در حالت پیش‌فرض (موبایل) نمایش داده می‌شود */
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+/* وقتی عرض صفحه از 768px بیشتر شد، این المان را مخفی کن */
+@media (min-width: 769px) {
+  .mobile-only-title {
+    display: none;
+  }
+}

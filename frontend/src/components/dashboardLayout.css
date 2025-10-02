@@ -1,0 +1,134 @@
+/* frontend/src/components/Layout.css */
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  margin-right: 240px; /* به اندازه عرض سایدبار */
+}
+
+/* =================================== */
+/* استایل‌های منوی کناری (Sidebar) */
+/* =================================== */
+.sidebar {
+  width: 240px;
+  background-color: var(--secondary-bg);
+  padding: 1.5rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  /* این سه خط منوی بالا و پایین را جدا کرده و خروج را به پایین می‌چسباند */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav a,
+.logout-link {
+  display: flex; /* ۱. این خط چیدمان را افقی می‌کند */
+  align-items: center; /* ۲. این خط آیکون و متن را کاملاً هم‌تراز (وسط‌چین عمودی) می‌کند */
+  gap: 0.85rem; /* ۳. این خط فاصله بین آیکون و متن را تنظیم می‌کند */
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease-in-out;
+}
+
+/* تغییر رنگ آیکون و متن در زمان هاور */
+.sidebar nav a:hover,
+.logout-link:hover {
+  background-color: var(--card-bg);
+  color: var(--text-primary); /* رنگ متن در زمان هاور */
+}
+
+/* رنگی کردن آیکون در زمان هاور */
+.sidebar nav a:hover svg,
+.logout-link:hover svg {
+  color: var(--accent-color); /* آیکون به رنگ سبز درمی‌آید */
+}
+
+.sidebar svg {
+  font-size: 1.2rem;
+  color: var(--text-secondary); /* رنگ پیش‌فرض آیکون */
+  transition: color 0.2s ease-in-out; /* انیمیشن نرم برای تغییر رنگ */
+}
+
+.logout-link {
+  margin-top: 1rem;
+}
+
+
+/* =================================== */
+/* استایل‌های منوی پایین (Bottom Nav) */
+/* =================================== */
+.bottom-nav {
+  display: none; /* در حالت دسکتاپ مخفی */
+}
+
+/* =================================== */
+/* استایل‌های واکنش‌گرا (Responsive) */
+/* =================================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-right: 0;
+    padding: 1rem;
+    padding-bottom: 80px; /* فضایی برای منوی پایینی */
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--secondary-bg);
+    border-top: 1px solid var(--card-bg);
+    z-index: 1000;
+  }
+  
+  .bottom-nav a {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    transition: color 0.2s ease-in-out;
+    padding: 0.5rem;
+  }
+
+  .bottom-nav a:hover {
+    color: var(--text-primary);
+  }
+}
+
+/* استایل آیتم فعال در سایدبار دسکتاپ */
+.sidebar nav a.active {
+  background-color: var(--card-bg);
+  color: var(--accent-color); /* متن و آیکون سبز می‌شوند */
+}
+
+/* استایل آیتم فعال در منوی پایین موبایل */
+.bottom-nav a.active {
+  color: var(--accent-color); /* آیکون سبز می‌شود */
+  transform: translateY(-2px); /* کمی به بالا حرکت می‌کند تا مشخص‌تر باشد */
+}
