@@ -16,7 +16,7 @@ def test_fine_tuned_model(text_to_test):
     return ner_results
 
 if __name__ == "__main__":
-    sample_text = "یک خودرو به آقای احمدی ۴۰۰ میلیون تومان"
+    sample_text = "برای آقای رضایی یک قهوه به قیمت ۲۰ هزار تومان یک نوشابه به قیمت 50 هزار تومن و 3 چیپس به قیمت ۲۰ هزار تومن ثبت کن"
     results = test_fine_tuned_model(sample_text)
     if results:
         print(f"متن ورودی: {sample_text}\n")

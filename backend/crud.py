@@ -83,86 +83,100 @@ def parse_price(price_text: str) -> int:
 
 def create_sale_from_entities(db: Session, entities: list, raw_text: str):
     """
-    تابع اصلی و بازنویسی شده برای ذخیره اطلاعات در دیتابیس.
-    حالا از تمام موجودیت‌های استخراج شده توسط مدل جدید پشتیبانی می‌کند.
+    تابع اصلی و بازنویسی شده برای پشتیبانی از چندین محصول در یک فاکتور.
     """
     # مقادیر پیش‌فرض
     customer_name = "مشتری عمومی"
-    product_name = None # <<-- تغییر: اول محصول را None در نظر می‌گیریم
-    price = 0
-    quantity = 1
-    quantity_word = None # <<-- اضافه شده: کلمه مربوط به تعداد را نگه می‌داریم
-    sale_datetime = datetime.now() 
+    sale_datetime = datetime.now()
+    sale_items_data = []
+    current_item = {}
 
-    # استخراج هوشمند اطلاعات از لیست موجودیت‌ها
+    # 1. استخراج مشتری و تاریخ از کل موجودیت‌ها
     for entity in entities:
         group = entity["entity_group"]
         word = entity["word"]
-        
         if group == "CUSTOMER":
             customer_name = word
-        elif group == "PRODUCT":
-            product_name = word
-        elif group == "PRICE":
-            price = parse_price(word)
-        elif group == "QUANTITY":
-            quantity_word = word # <<-- کلمه تعداد را ذخیره می‌کنیم
+        elif group == "DATETIME":
+            if word == "دیروز":
+                sale_datetime = datetime.now() - timedelta(days=1)
+
+    # 2. گروه‌بندی موجودیت‌ها برای هر محصول
+    for entity in entities:
+        group = entity["entity_group"]
+        word = entity["word"]
+
+        if group == "QUANTITY":
             try:
                 quantity = parse_persian_number(word)
             except ValueError:
                 quantity_map = {"یک": 1, "دو": 2, "سه": 3, "چهار": 4, "پنج": 5}
                 quantity = quantity_map.get(word, 1)
-        elif group == "DATETIME":
-            if word == "دیروز":
-                sale_datetime = datetime.now() - timedelta(days=1)
+            current_item['quantity'] = quantity
+        
+        elif group == "PRODUCT":
+            current_item['product_name'] = word
 
-    # ==================================================================
-    # بخش جدید: منطق جایگزین برای پیدا کردن محصول
-    # ==================================================================
-    if product_name is None and quantity_word is not None:
-        try:
-            words = raw_text.split()
-            # پیدا کردن ایندکس کلمه‌ی تعداد
-            quantity_index = words.index(quantity_word)
-            # کلمه‌ی بعدی به احتمال زیاد محصول است
-            if quantity_index + 1 < len(words):
-                product_name = words[quantity_index + 1]
-        except (ValueError, IndexError):
-            # اگر کلمه تعداد در متن خام پیدا نشد یا کلمه آخری بود
-            product_name = "محصول نامشخص"
-            
-    if product_name is None:
-         product_name = "محصول نامشخص"
-    # ==================================================================
+        elif group == "PRICE":
+            current_item['price_per_item'] = parse_price(word)
+            # با رسیدن به قیمت، یک آیتم کامل شده و به لیست اضافه می‌شود
+            if 'product_name' in current_item and 'price_per_item' in current_item:
+                # اگر تعداد مشخص نشده بود، ۱ در نظر بگیر
+                if 'quantity' not in current_item:
+                    current_item['quantity'] = 1
+                
+                sale_items_data.append(current_item)
+                current_item = {} # آیتم فعلی را برای محصول بعدی ریست کن
 
-    # گرفتن یا ساختن مشتری و محصول در دیتابیس
+    # اگر آیتمی بدون قیمت در انتها باقی مانده بود (بعید اما ممکن)
+    if 'product_name' in current_item and 'quantity' in current_item and 'price_per_item' not in current_item:
+        current_item['price_per_item'] = 0 # قیمت پیش‌فرض
+        sale_items_data.append(current_item)
+
+    # اگر هیچ محصولی پیدا نشد، عملیات را متوقف کن
+    if not sale_items_data:
+        # در اینجا می‌توانید یک خطا برگردانید یا یک فاکتور خالی ایجاد کنید
+        # فعلا یک فاکتور خالی برمی‌گردانیم
+        return None 
+
+    # 3. ساخت مشتری، کانال فروش و فاکتور اصلی
     customer = get_or_create(db, models.Customer, name=customer_name, name_field="customer_name")
-    product = get_or_create(db, models.Product, name=product_name, name_field="product_name")
-    
-    # یک کانال فروش پیش‌فرض
     channel = get_or_create(db, models.SalesChannel, name="فروش حضوری", name_field="channel_name")
-
-    # ساخت فاکتور با تاریخ صحیح
+    
+    # قیمت کل اولیه صفر است و بعدا آپدیت می‌شود
     new_invoice = models.Invoice(
         customer_id=customer.customer_id,
         channel_id=channel.channel_id,
-        total_invoice_price=price * quantity, # محاسبه قیمت کل
+        total_invoice_price=0,
         invoice_timestamp=sale_datetime
     )
     db.add(new_invoice)
     db.commit()
     db.refresh(new_invoice)
 
-    # افزودن آیتم به فاکتور با تعداد و قیمت صحیح
-    new_sale_item = models.SalesItem(
-        invoice_id=new_invoice.invoice_id,
-        product_id=product.product_id,
-        quantity=quantity,
-        price_per_item=price,
-        total_item_price=price * quantity
-    )
-    db.add(new_sale_item)
+    # 4. افزودن تمام آیتم‌های فروش به فاکتور
+    total_invoice_price = 0
+    for item_data in sale_items_data:
+        product = get_or_create(db, models.Product, name=item_data['product_name'], name_field="product_name")
+        
+        quantity = item_data['quantity']
+        price_per_item = item_data['price_per_item']
+        total_item_price = quantity * price_per_item
+        total_invoice_price += total_item_price
+
+        new_sale_item = models.SalesItem(
+            invoice_id=new_invoice.invoice_id,
+            product_id=product.product_id,
+            quantity=quantity,
+            price_per_item=price_per_item,
+            total_item_price=total_item_price
+        )
+        db.add(new_sale_item)
+
+    # 5. به‌روزرسانی قیمت کل فاکتور
+    new_invoice.total_invoice_price = total_invoice_price
+    db.add(new_invoice)
     db.commit()
-    db.refresh(new_sale_item)
+    db.refresh(new_invoice)
     
     return new_invoice

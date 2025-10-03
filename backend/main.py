@@ -121,12 +121,27 @@ def process_command(command: schemas.UserCommand, db: Session = Depends(get_db))
     raw_text = command.command_text
     entities = extract_entities(raw_text)
     new_invoice = crud.create_sale_from_entities(db, entities, raw_text)
+    
+    if new_invoice is None:
+        raise HTTPException(status_code=400, detail="اطلاعات کافی برای ثبت فروش یافت نشد.")
+
     db.refresh(new_invoice)
+    
+    # ساخت لیست آیتم‌ها برای پاسخ JSON
+    response_items = [
+        {
+            "product_name": item.product.product_name,
+            "quantity": item.quantity,
+            "price_per_item": item.price_per_item,
+            "total_item_price": item.total_item_price
+        } for item in new_invoice.items
+    ]
     
     return {
         "message": "فروش با موفقیت ثبت شد!",
         "invoice_id": new_invoice.invoice_id,
         "customer_name": new_invoice.customer.customer_name,
-        "product_name": new_invoice.items[0].product.product_name,
-        "total_price": new_invoice.total_invoice_price
+        "total_invoice_price": new_invoice.total_invoice_price,
+        "invoice_timestamp": new_invoice.invoice_timestamp,
+        "items": response_items # <-- لیست آیتم‌ها به پاسخ اضافه شد
     }

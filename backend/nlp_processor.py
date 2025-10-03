@@ -62,7 +62,7 @@ def extract_entities(text: str):
 
 # برای تست مستقیم خود فایل
 if __name__ == "__main__":
-    sample_text = "یک خودرو به آقای احمدی ۴۰۰ میلیون تومان"
+    sample_text = "برای آقای رضایی یک قهوه به قیمت ۲۰ هزار تومان یک نوشابه به قیمت 50 هزار تومن و 3 چیپس به قیمت ۲۰ هزار تومن ثبت کن"
     
     extracted = extract_entities(sample_text)
     print(f"موجودیت‌های استخراج شده از جمله نمونه:\n '{sample_text}'")

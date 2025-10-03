@@ -58,6 +58,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-family: 'Vazirmatn';
 }
 
 .login-button:hover {

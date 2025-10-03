@@ -63,7 +63,6 @@ const Home = () => {
     <div className="home-container">
       <header className="home-header">
         <h2>سلام {user?.displayName}!</h2>
-        <p>اینجا یک نمای کلی از کسب‌و‌کار خود را مشاهده می‌کنید.</p>
         <div className="command-bar-wrapper">
           <CommandBar onOpen={openCommandModal} />
         </div>

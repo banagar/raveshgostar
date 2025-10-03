@@ -19,13 +19,23 @@ const InvoiceCard = ({ invoiceData }) => {
   };
 
   // چون داده‌ها از دو منبع متفاوت میان، باید هوشمندانه عمل کنیم
-  const invoiceItems = invoiceData.items || [{
-      item_id: 1,
-      product: { product_name: invoiceData.product_name },
-      quantity: invoiceData.quantity || 1,
-      price_per_item: invoiceData.price_per_item || invoiceData.total_price,
-      total_item_price: invoiceData.total_price
-  }];
+  const invoiceItems = invoiceData.items || (() => {
+    // اگر تعداد در دیتا وجود نداشت، ۱ در نظر بگیر
+    const quantity = invoiceData.quantity || 1;
+    // قیمت کل فاکتور رو بگیر
+    const totalPrice = invoiceData.total_invoice_price || invoiceData.total_price;
+
+    // قیمت هر آیتم رو محاسبه کن: یا از دیتای ورودی بخون یا از تقسیم قیمت کل بر تعداد بدست بیار
+    const pricePerItem = invoiceData.price_per_item || (totalPrice && quantity ? totalPrice / quantity : 0);
+
+    return [{
+        item_id: 1,
+        product: { product_name: invoiceData.product_name },
+        quantity: quantity,
+        price_per_item: pricePerItem,
+        total_item_price: totalPrice
+    }];
+  })();
 
 
   return (
@@ -63,9 +73,9 @@ const InvoiceCard = ({ invoiceData }) => {
         </thead>
         <tbody>
           {invoiceItems.map((item, index) => (
-            <tr key={item.item_id}>
+            <tr key={item.item_id || index}>
               <td>{index + 1}</td>
-              <td>{item.product.product_name}</td>
+              <td>{item.product?.product_name || item.product_name}</td>
               <td>{formatNumber(item.quantity)}</td>
               <td>{formatNumber(item.price_per_item)}</td>
               <td>{formatNumber(item.total_item_price)}</td>
