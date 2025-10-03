@@ -6,6 +6,8 @@ from fastapi import UploadFile, File # این دو مورد رو اضافه کن
 from transcriber import transcribe_audio_from_bytes # ماژول جدید رو ایمپورت کن
 from sqlalchemy.orm import Session
 from datetime import timedelta
+import random
+from typing import List
 
 import security
 import models
@@ -115,6 +117,42 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
 @app.get("/")
 def read_root():
     return {"Status": "Project Foundation is Ready!"}
+
+# =================================================================
+# ENDPOINT جدید برای جمله انگیزشی
+# =================================================================
+# لیستی از جملات انگیزشی
+QUOTES = [
+    {"quote": "تنها راه انجام دادن کارهای بزرگ، دوست داشتن کاری است که انجام می‌دهی.", "author": "استیو جابز"},
+    {"quote": "موفقیت یعنی رفتن از شکستی به شکست دیگر بدون از دست دادن اشتیاق.", "author": "وینستون چرچیل"},
+    {"quote": "رویاهای خود را بسازید، وگرنه فرد دیگری شما را برای ساختن رویای خود استخدام خواهد کرد.", "author": "فرح گری"},
+]
+
+@app.get("/api/quote", response_model=schemas.Quote)
+def get_random_quote():
+    """
+    یک جمله انگیزشی تصادفی برمی‌گرداند.
+    """
+    return random.choice(QUOTES)
+
+# =================================================================
+# ENDPOINT جدید برای آخرین فعالیت‌ها
+# =================================================================
+@app.get("/api/recent-activities", response_model=List[schemas.RecentActivity])
+def read_recent_activities(db: Session = Depends(get_db)):
+    """
+    لیستی از آخرین فاکتورهای ثبت شده را برمی‌گرداند.
+    """
+    invoices = crud.get_recent_invoices(db, limit=5)
+    # برای اینکه Pydantic بتواند customer_name را بخواند، باید به این شکل تبدیل شود
+    activities = []
+    for invoice in invoices:
+        activities.append({
+            "customer_name": invoice.customer.customer_name,
+            "total_invoice_price": invoice.total_invoice_price,
+            "invoice_timestamp": invoice.invoice_timestamp
+        })
+    return activities
 
 @app.post("/api/command", response_model=schemas.SaleConfirmation)
 def process_command(command: schemas.UserCommand, db: Session = Depends(get_db)):

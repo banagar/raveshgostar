@@ -79,4 +79,16 @@ export const getTopProducts = async (period = 'month') => {
   }
 };
 
+// تابع جدید برای دریافت جمله انگیزشی
+export const getQuote = async () => {
+  const response = await apiClient.get('/api/quote');
+  return response.data;
+};
+
+// تابع جدید برای دریافت آخرین فعالیت‌ها
+export const getRecentActivities = async () => {
+  const response = await apiClient.get('/api/recent-activities');
+  return response.data;
+};
+
 export default apiClient;

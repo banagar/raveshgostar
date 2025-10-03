@@ -180,3 +180,9 @@ def create_sale_from_entities(db: Session, entities: list, raw_text: str):
     db.refresh(new_invoice)
     
     return new_invoice
+
+def get_recent_invoices(db: Session, limit: int = 5):
+    """
+    تابع جدید برای دریافت آخرین فاکتورهای ثبت شده.
+    """
+    return db.query(models.Invoice).order_by(models.Invoice.invoice_timestamp.desc()).limit(limit).all()

@@ -37,3 +37,14 @@ class KpiSummary(BaseModel):
     todays_sales: int
     new_customers_this_month: int
     weekly_average_sales: int
+
+class Quote(BaseModel):
+    quote: str
+    author: str
+
+class RecentActivity(BaseModel):
+    customer_name: str
+    total_invoice_price: int
+    invoice_timestamp: datetime
+
+    model_config = ConfigDict(from_attributes=True)
