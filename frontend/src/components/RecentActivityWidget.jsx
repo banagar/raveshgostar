@@ -1,7 +1,7 @@
 // src/components/RecentActivityWidget.jsx
 
 import React from 'react';
-import { FaClock, FaUser, FaFileInvoiceDollar } from 'react-icons/fa';
+import { FaFileInvoiceDollar } from 'react-icons/fa';
 import './RecentActivityWidget.css';
 
 // تابعی برای نمایش زمان به صورت "چند دقیقه/ساعت پیش"
@@ -46,7 +46,7 @@ const RecentActivityWidget = ({ activities }) => {
               </span>
             </div>
             <div className="activity-time">
-              <FaClock /> {timeSince(activity.invoice_timestamp)}
+              {timeSince(activity.invoice_timestamp)}
             </div>
           </li>
         ))}

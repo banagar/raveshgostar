@@ -7,10 +7,18 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('userToken') || null);
-  const [isLoading, setIsLoading] = useState(true); // ۱. وضعیت جدید برای بارگذاری اولیه
+  const [isLoading, setIsLoading] = useState(true);
 
+  // تابع logout را اینجا تعریف می‌کنیم تا در دسترس باشد
+  const logout = () => {
+    localStorage.removeItem('userToken');
+    setToken(null);
+    setUser(null);
+    delete apiClient.defaults.headers.common['Authorization'];
+  };
+  
   useEffect(() => {
-    setIsLoading(true); // هر بار که توکن عوض می‌شه، بارگذاری شروع می‌شه
+    setIsLoading(true);
     if (token) {
       try {
         const decodedUser = jwtDecode(token);
@@ -18,30 +26,39 @@ export const AuthProvider = ({ children }) => {
         apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } catch (error) {
         console.error("Invalid token:", error);
-        localStorage.removeItem('userToken');
-        setToken(null);
-        setUser(null);
+        // اگر توکن از ابتدا نامعتبر بود، کاربر را خارج کن
+        logout();
       }
     }
-    setIsLoading(false); // ۲. بعد از اتمام کار، بارگذاری تمام می‌شود
+    setIsLoading(false);
   }, [token]);
+
+  // useEffect جدید برای رهگیری خطاها
+  useEffect(() => {
+    const errorInterceptor = apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        // اگر خطای 401 (عدم احراز هویت) رخ داد، کاربر را خارج کن
+        if (error.response && error.response.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    // در زمان پاکسازی، رهگیر را حذف می‌کنیم
+    return () => {
+      apiClient.interceptors.response.eject(errorInterceptor);
+    };
+  }, []); // این useEffect فقط یک بار اجرا می‌شود
 
   const login = (newToken) => {
     localStorage.setItem('userToken', newToken);
     setToken(newToken);
   };
 
-  const logout = () => {
-    localStorage.removeItem('userToken');
-    setToken(null);
-    setUser(null);
-    delete apiClient.defaults.headers.common['Authorization'];
-  };
-
-  // ۳. isLoading را هم به بقیه برنامه می‌دهیم
   const value = { user, token, isLoading, login, logout };
 
-  // ۴. تا وقتی در حال بررسی اولیه توکن هستیم، چیزی نمایش نمی‌دهیم
   return (
     <AuthContext.Provider value={value}>
       {!isLoading && children}

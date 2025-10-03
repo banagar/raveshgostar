@@ -56,17 +56,16 @@
 .quote-text {
   margin: 0;
   padding-right: 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--text-primary);
 }
 
 .quote-author {
   display: block;
   text-align: left;
-  margin-top: 0.5rem;
-  font-weight: bold;
+  margin-top: 0.3rem;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .activity-widget-container {
