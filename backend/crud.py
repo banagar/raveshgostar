@@ -45,7 +45,10 @@ def parse_price(price_text: str) -> int:
     price_text = price_text.replace("تومان", "").strip()
     
     # استخراج تمام اعداد از متن
-    numbers_str = re.findall(r'\d+', price_text)
+    # اعداد فارسی را هم به انگلیسی تبدیل می‌کنیم
+    persian_to_english = str.maketrans('۰۱۲۳۴۵۶۷۸۹', '0123456789')
+    price_text_en = price_text.translate(persian_to_english)
+    numbers_str = re.findall(r'\d+', price_text_en)
     number_val = int("".join(numbers_str)) if numbers_str else 0
     
     # اگر کلماتی مثل "میلیون" یا "هزار" وجود داشت، عدد را در آن ضرب کن
@@ -85,10 +88,11 @@ def create_sale_from_entities(db: Session, entities: list, raw_text: str):
     """
     # مقادیر پیش‌فرض
     customer_name = "مشتری عمومی"
-    product_name = "محصول نامشخص"
+    product_name = None # <<-- تغییر: اول محصول را None در نظر می‌گیریم
     price = 0
     quantity = 1
-    sale_datetime = datetime.now() # زمان حال به عنوان پیش‌فرض
+    quantity_word = None # <<-- اضافه شده: کلمه مربوط به تعداد را نگه می‌داریم
+    sale_datetime = datetime.now() 
 
     # استخراج هوشمند اطلاعات از لیست موجودیت‌ها
     for entity in entities:
@@ -102,16 +106,34 @@ def create_sale_from_entities(db: Session, entities: list, raw_text: str):
         elif group == "PRICE":
             price = parse_price(word)
         elif group == "QUANTITY":
+            quantity_word = word # <<-- کلمه تعداد را ذخیره می‌کنیم
             try:
                 quantity = parse_persian_number(word)
             except ValueError:
-                # اگر تبدیل به عدد مستقیم ممکن نبود (مثلا: "دو")
                 quantity_map = {"یک": 1, "دو": 2, "سه": 3, "چهار": 4, "پنج": 5}
                 quantity = quantity_map.get(word, 1)
         elif group == "DATETIME":
             if word == "دیروز":
                 sale_datetime = datetime.now() - timedelta(days=1)
-            # می‌توان منطق‌های پیچیده‌تر برای تاریخ را اینجا اضافه کرد
+
+    # ==================================================================
+    # بخش جدید: منطق جایگزین برای پیدا کردن محصول
+    # ==================================================================
+    if product_name is None and quantity_word is not None:
+        try:
+            words = raw_text.split()
+            # پیدا کردن ایندکس کلمه‌ی تعداد
+            quantity_index = words.index(quantity_word)
+            # کلمه‌ی بعدی به احتمال زیاد محصول است
+            if quantity_index + 1 < len(words):
+                product_name = words[quantity_index + 1]
+        except (ValueError, IndexError):
+            # اگر کلمه تعداد در متن خام پیدا نشد یا کلمه آخری بود
+            product_name = "محصول نامشخص"
+            
+    if product_name is None:
+         product_name = "محصول نامشخص"
+    # ==================================================================
 
     # گرفتن یا ساختن مشتری و محصول در دیتابیس
     customer = get_or_create(db, models.Customer, name=customer_name, name_field="customer_name")

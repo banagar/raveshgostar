@@ -6,17 +6,17 @@
 
 .success-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem; 
 }
 
 .success-icon {
-  font-size: 4rem;
+  font-size: 3rem;
   color: var(--accent-color);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .success-header h1 {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
 }
 
@@ -25,29 +25,16 @@
   font-size: 1.1rem;
 }
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-/* در صفحات بزرگتر، کارت‌ها کنار هم قرار می‌گیرند */
-@media (min-width: 768px) {
-  .cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
 .review-actions {
   text-align: center;
-  margin-top: 2.5rem;
+  margin-top: 1.5rem;
 }
 
 .confirm-button {
   background-color: var(--accent-color);
   color: white;
   border: none;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1rem;
   border-radius: 6px;
   font-size: 1rem;
   font-family: 'Vazirmatn';
@@ -57,4 +44,11 @@
 
 .confirm-button:hover {
   background-color: var(--accent-hover);
+}
+
+.invoice-display-area {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
 }

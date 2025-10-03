@@ -1,0 +1,80 @@
+// src/components/InvoiceCard.jsx
+import React from 'react';
+import './InvoiceCard.css'; 
+
+const InvoiceCard = ({ invoiceData }) => {
+  // تابعی برای فرمت کردن اعداد
+  const formatNumber = (num) => {
+    // اگر ورودی عدد نبود، همان را برگردان
+    if (typeof num !== 'number') {
+        return num;
+    }
+    return num.toLocaleString('fa-IR');
+  };
+
+  // تابعی برای نمایش تاریخ
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fa-IR', options);
+  };
+
+  // چون داده‌ها از دو منبع متفاوت میان، باید هوشمندانه عمل کنیم
+  const invoiceItems = invoiceData.items || [{
+      item_id: 1,
+      product: { product_name: invoiceData.product_name },
+      quantity: invoiceData.quantity || 1,
+      price_per_item: invoiceData.price_per_item || invoiceData.total_price,
+      total_item_price: invoiceData.total_price
+  }];
+
+
+  return (
+    <div className="invoice-card">
+      {/* بخش هدر فاکتور */}
+      <div className="invoice-header">
+        <div className="header-item">
+          <span>شماره فاکتور</span>
+          <strong>{invoiceData.invoice_id}</strong>
+        </div>
+        <div className="header-item">
+          <span>مشتری</span>
+          <strong>{invoiceData.customer?.customer_name || invoiceData.customer_name}</strong>
+        </div>
+        <div className="header-item">
+          <span>تاریخ</span>
+          <strong>{formatDate(invoiceData.invoice_timestamp || new Date())}</strong>
+        </div>
+        <div className="header-item total-price">
+          <span>مبلغ کل</span>
+          <strong>{formatNumber(invoiceData.total_invoice_price || invoiceData.total_price)} تومان</strong>
+        </div>
+      </div>
+
+      {/* جدول اقلام فاکتور */}
+      <table className="invoice-items-table">
+        <thead>
+          <tr>
+            <th>ردیف</th>
+            <th>محصول</th>
+            <th>تعداد</th>
+            <th>قیمت واحد</th>
+            <th>قیمت کل</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invoiceItems.map((item, index) => (
+            <tr key={item.item_id}>
+              <td>{index + 1}</td>
+              <td>{item.product.product_name}</td>
+              <td>{formatNumber(item.quantity)}</td>
+              <td>{formatNumber(item.price_per_item)}</td>
+              <td>{formatNumber(item.total_item_price)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default InvoiceCard;
