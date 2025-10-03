@@ -1,60 +1,101 @@
+// frontend/src/pages/Home.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getKpiSummary } from '../services/api'; // ۱. ایمپورت تابع API
+import { getKpiSummary, getQuote, getRecentActivities } from '../services/api'; 
 import KPI_Card from '../components/KPI_Card';
 import FloatingActionButton from '../components/FloatingActionButton';
 import CommandModal from '../components/CommandModal';
 import CommandBar from '../components/CommandBar';
-import { FaMoneyBillWave, FaUsers, FaChartLine } from 'react-icons/fa';
+import RecentActivityWidget from '../components/RecentActivityWidget';
+// آیکون‌های جدید رو اضافه کن
+import { FaMoneyBillWave, FaUsers, FaChartLine, FaQuoteLeft, FaClock } from 'react-icons/fa';
 import './Home.css';
+
+// تابع تاریخ رو بدون تغییر نگه می‌داریم
+const getCurrentDate = () => {
+  return new Date().toLocaleDateString('fa-IR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
 
 const Home = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const { user } = useAuth();
   
-  // ۲. State برای نگهداری داده‌های KPI، وضعیت لودینگ و خطا
   const [kpiData, setKpiData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadingKpi, setLoadingKpi] = useState(true);
+  const [errorKpi, setErrorKpi] = useState(null);
 
-  // ۳. useEffect برای دریافت داده‌ها وقتی کامپوننت لود می‌شود
+  const [quote, setQuote] = useState(null);
+  const [loadingQuote, setLoadingQuote] = useState(true);
+  const [errorQuote, setErrorQuote] = useState(null);
+
+  const [activities, setActivities] = useState([]);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+  const [errorActivities, setErrorActivities] = useState(null);
+
   useEffect(() => {
     const fetchKpis = async () => {
       try {
-        setLoading(true);
+        setLoadingKpi(true);
         const data = await getKpiSummary();
         setKpiData(data);
-        setError(null);
       } catch (err) {
-        setError("خطا در بارگذاری اطلاعات داشبورد");
-        setKpiData(null);
+        setErrorKpi("خطا در بارگذاری شاخص‌ها");
       } finally {
-        setLoading(false);
+        setLoadingKpi(false);
+      }
+    };
+
+    const fetchQuote = async () => {
+      try {
+        setLoadingQuote(true);
+        const data = await getQuote();
+        setQuote(data);
+      } catch (err) {
+        setErrorQuote("خطا در دریافت جمله انگیزشی");
+      } finally {
+        setLoadingQuote(false);
+      }
+    };
+
+    const fetchActivities = async () => {
+      try {
+        setLoadingActivities(true);
+        const data = await getRecentActivities();
+        setActivities(data);
+      } catch (err) {
+        setErrorActivities("خطا در بارگذاری فعالیت‌های اخیر");
+      } finally {
+        setLoadingActivities(false);
       }
     };
 
     fetchKpis();
-  }, []); // [] یعنی این افکت فقط یک بار بعد از اولین رندر اجرا شود
+    fetchQuote();
+    fetchActivities();
+  }, []);
 
   const openCommandModal = () => setModalOpen(true);
   const closeCommandModal = () => setModalOpen(false);
 
-  // ۴. آماده‌سازی کارت‌ها برای نمایش
   const cards = [
     {
       title: 'فروش امروز',
-      value: loading ? '...' : `${kpiData?.todays_sales.toLocaleString('fa-IR')} تومان`,
+      value: loadingKpi ? '...' : `${kpiData?.todays_sales.toLocaleString('fa-IR')} تومان`,
       icon: <FaMoneyBillWave />,
     },
     {
-      title: 'میانگین فروش هفته', // عنوان کارت به‌روز شد
-      // مقدار کارت از داده‌های واقعی خوانده می‌شود
-      value: loading ? '...' : `${kpiData?.weekly_average_sales.toLocaleString('fa-IR')} تومان`,
+      title: 'میانگین فروش هفته',
+      value: loadingKpi ? '...' : `${kpiData?.weekly_average_sales.toLocaleString('fa-IR')} تومان`,
       icon: <FaChartLine />,
     },
     {
       title: 'مشتریان جدید ماه',
-      value: loading ? '...' : `${kpiData?.new_customers_this_month.toLocaleString('fa-IR')} نفر`,
+      value: loadingKpi ? '...' : `${kpiData?.new_customers_this_month.toLocaleString('fa-IR')} نفر`,
       icon: <FaUsers />,
     },
   ];
@@ -62,13 +103,29 @@ const Home = () => {
   return (
     <div className="home-container">
       <header className="home-header">
-        <h2>سلام {user?.displayName}!</h2>
+        <div className="header-text">
+          <h2>سلام {user?.displayName} عزیز</h2>
+          {/* بخش تاریخ رو اینطوری تغییر بده */}
+          <p className="current-date">
+          <FaClock />  امروز، {getCurrentDate()}
+          </p>
+        </div>
         <div className="command-bar-wrapper">
           <CommandBar onOpen={openCommandModal} />
         </div>
       </header>
       
-      {error && <p className="error-message">{error}</p>}
+      {loadingQuote && <p>در حال بارگذاری جمله انگیزشی...</p>}
+      {errorQuote && <p className="error-message">{errorQuote}</p>}
+      {quote && (
+        <blockquote className="quote-block">
+          <FaQuoteLeft />
+          <p className="quote-text">{quote.quote}</p>
+          <cite className="quote-author">- {quote.author}</cite>
+        </blockquote>
+      )}
+
+      {errorKpi && <p className="error-message">{errorKpi}</p>}
 
       <div className="kpi-grid">
         {cards.map((card, index) => (
@@ -79,6 +136,14 @@ const Home = () => {
             icon={card.icon}
           />
         ))}
+      </div>
+      
+      <div className="activity-widget-container">
+        {loadingActivities && <p>در حال بارگذاری فعالیت‌ها...</p>}
+        {errorActivities && <p className="error-message">{errorActivities}</p>}
+        {!loadingActivities && !errorActivities && (
+          <RecentActivityWidget activities={activities} />
+        )}
       </div>
       
       <FloatingActionButton onClick={openCommandModal} />

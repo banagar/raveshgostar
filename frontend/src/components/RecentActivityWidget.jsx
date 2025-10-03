@@ -39,7 +39,7 @@ const RecentActivityWidget = ({ activities }) => {
             <div className="activity-icon"><FaFileInvoiceDollar /></div>
             <div className="activity-details">
               <span className="customer-name">
-                <FaUser /> فروش به <strong>{activity.customer_name}</strong>
+                فروش به <strong>{activity.customer_name}</strong>
               </span>
               <span className="invoice-total">
                 {activity.total_invoice_price.toLocaleString('fa-IR')} تومان

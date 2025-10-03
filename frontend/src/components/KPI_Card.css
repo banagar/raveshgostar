@@ -2,7 +2,7 @@
 .kpi-card {
   background-color: var(--secondary-bg);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -11,7 +11,7 @@
 }
 
 .kpi-icon {
-  font-size: 2rem;
+  font-size: 1.5rem; 
   color: var(--accent-color);
 }
 
@@ -20,7 +20,7 @@
 }
 
 .kpi-value {
-  font-size: 1.75rem;
+  font-size: 1.4rem;
   font-weight: bold;
   color: var(--text-primary);
   margin: 0;
@@ -35,24 +35,8 @@
 
 @media (min-width: 768px) {
   .kpi-card {
-    /* در حالت افقی، محتوا به صورت ستونی بهتر دیده می‌شه */
-    flex-direction: column;
-    align-items: flex-start; /* آیتم‌ها را از چپ تراز می‌کند */
-    padding: 1rem; /* پدینگ داخلی را کمی کمتر می‌کنیم */
-  }
-
-  .kpi-icon {
-    /* اندازه آیکون را کمی کوچک‌تر می‌کنیم */
-    font-size: 1.75rem;
-  }
-
-  .kpi-value {
-    /* اندازه عدد اصلی را کمی کوچک‌تر می‌کنیم */
-    font-size: 1.5rem;
-  }
-
-  .kpi-title {
-    /* اندازه عنوان را کمی کوچک‌تر می‌کنیم */
-    font-size: 0.85rem;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1rem;
   }
 }
