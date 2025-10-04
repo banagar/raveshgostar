@@ -111,6 +111,9 @@ const SalesTrendChart = () => {
         }
       },
       x: {
+        grid: {
+        display: false // این خط، خطوط شبکه‌ای افقی رو مخفی می‌کنه
+        },
         ticks: {
           // 5. استفاده از متغیر برای رنگ اعداد محور
           color: textSecondaryColor,

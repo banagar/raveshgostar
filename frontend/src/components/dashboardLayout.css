@@ -5,7 +5,7 @@
 
 .main-content {
   flex-grow: 1;
-  padding: 2rem;
+  padding: 1rem 2rem;
   margin-right: 200px; /* به اندازه عرض سایدبار */
 }
 

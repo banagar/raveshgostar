@@ -7,6 +7,18 @@
   font-style: normal;
 }
 
+/* تم تیره
+:root {
+  --primary-bg: #1A202C;
+  --secondary-bg: #2D3748;
+  --card-bg: #1A202C;
+  --text-primary: #EDF2F7;
+  --text-secondary: #A0AEC0;
+  --accent-color: #048F2F;
+  --accent-hover: #C6A83A;
+} */
+
+/* تم روشن */
 :root {
   --primary-bg: #E9ECF1;
   --secondary-bg: #F1F6F9;

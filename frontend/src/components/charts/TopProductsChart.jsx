@@ -71,6 +71,9 @@ const TopProductsChart = () => {
     },
     scales: { 
       y: { 
+        grid: {
+        display: false // این خط، خطوط شبکه‌ای افقی رو مخفی می‌کنه
+        },
         ticks: { 
           // 3. استفاده از متغیر برای رنگ لیبل‌های محور
           color: textSecondaryColor,

@@ -120,8 +120,10 @@ const Home = () => {
       {quote && (
         <blockquote className="quote-block">
           <FaQuoteLeft />
-          <p className="quote-text">{quote.quote}</p>
-          <cite className="quote-author">- {quote.author}</cite>
+          <div className='quote-content'>
+            <p className="quote-text">{quote.quote}</p>
+            <cite className="quote-author">- {quote.author}</cite>
+          </div>
         </blockquote>
       )}
 
