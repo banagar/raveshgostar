@@ -21,7 +21,7 @@
 }
 
 .success-header p {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 1.1rem;
 }
 
