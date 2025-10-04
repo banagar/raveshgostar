@@ -15,8 +15,13 @@ import schemas
 import crud
 from database import SessionLocal, engine
 from nlp_processor import extract_entities
-from reports.sales import trend_analysis
-from reports.sales import top_products
+from reports.sales import (
+    trend_analysis,
+    top_products,
+    category_analysis,
+    peak_time_analysis,
+    basket_analysis,
+)
 from reports.kpi import kpi_summary
 
 models.Base.metadata.create_all(bind=engine)
@@ -77,21 +82,32 @@ def read_root():
     return {"Status": "Project Foundation is Ready!"}
 
 
-# اتصال روتر گزارش KPI <-- این بخش رو اضافه کن
+# اتصال گزارش KPI
 app.include_router(
-    kpi_summary.router, prefix="/api/reports/kpi", tags=["Sales Reports"]
+    kpi_summary.router,
+    prefix="/api/reports/kpi",
 )
 
-# اتصال روتر گزارش روند فروش
+# اتصال گزارشات فروش
 app.include_router(
-    trend_analysis.router, prefix="/api/reports/sales", tags=["Sales Reports"]
+    trend_analysis.router,
+    prefix="/api/reports/sales",
 )
-
-# اتصال روتر گزارش محصولات برتر <-- این بخش رو اضافه کن
 app.include_router(
     top_products.router,
     prefix="/api/reports/sales",
-    # tags رو اینجا تعریف نمی‌کنیم چون در خود روتر تعریف شده
+)
+app.include_router(
+    category_analysis.router, 
+    prefix="/api/reports/sales"
+)
+app.include_router(
+    peak_time_analysis.router, 
+    prefix="/api/reports/sales"
+)
+app.include_router(
+    basket_analysis.router, 
+    prefix="/api/reports/sales"
 )
 
 

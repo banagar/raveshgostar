@@ -1,5 +1,5 @@
 # models.py
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text, Float
 from sqlalchemy.orm import relationship
 from database import Base
 import datetime
@@ -67,3 +67,17 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     display_name = Column(String, index=True)
     hashed_password = Column(String)
+
+# ==================================================================
+# ++ جدول جدید برای کش کردن دسته‌بندی محصولات
+# ==================================================================
+class ProductCategoryCache(Base):
+    __tablename__ = "product_category_cache"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.product_id"), unique=True, index=True)
+    assigned_category = Column(String, index=True)
+    confidence_score = Column(Float)
+    last_updated = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+    
+    product = relationship("Product")

@@ -46,6 +46,7 @@ const SalesTrendChart = () => {
         setApiData(data);
       } catch (error) {
         console.error("Error fetching trends data", error);
+        setError('خطا در بارگذاری گزارش روند فروش.');
       } finally {
         setLoading(false);
       }

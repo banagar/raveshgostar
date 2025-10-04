@@ -20,7 +20,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  min-height: 40vh; /* ارتفاع رو کمی بیشتر کردم برای تناسب بهتر */
+  min-height: 46vh; /* ارتفاع رو کمی بیشتر کردم برای تناسب بهتر */
   position: relative; /* ۱. این خط حیاتی است */
   display: flex; /* ۲. این خطوط برای چیدمان بهتر کنترل‌ها و نمودار اضافه شد */
   flex-direction: column;

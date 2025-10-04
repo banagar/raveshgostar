@@ -79,6 +79,17 @@ export const getTopProducts = async (period = 'month') => {
   }
 };
 
+export const getCategoryAnalysis = async (period = 'month') => { // ++ پارامتر period اضافه شد
+  try {
+    // ++ پارامتر به عنوان query string به URL اضافه شد
+    const response = await apiClient.get(`/api/reports/sales/category-analysis?period=${period}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch category analysis:", error.response?.data);
+    throw error.response?.data || { detail: "خطا در دریافت گزارش دسته‌بندی" };
+  }
+};
+
 // تابع جدید برای دریافت جمله انگیزشی
 export const getQuote = async () => {
   const response = await apiClient.get('/api/quote');
