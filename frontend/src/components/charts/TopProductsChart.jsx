@@ -14,6 +14,15 @@ const TopProductsChart = () => {
   const [loading, setLoading] = useState(true);
   const { width } = useWindowSize();
 
+  // ====================  تغییر از اینجا شروع میشه ====================
+
+  // 1. خوندن متغیرهای رنگ از :root
+  const rootStyles = getComputedStyle(document.documentElement);
+  const accentColor = rootStyles.getPropertyValue('--accent-color').trim();
+  const textSecondaryColor = rootStyles.getPropertyValue('--text-secondary').trim();
+
+  // =================================================================
+
   const PERIOD_OPTIONS = [
     { label: 'سالانه', value: 'year' },
     { label: 'ماهانه', value: 'month' },
@@ -36,9 +45,10 @@ const TopProductsChart = () => {
   const chartData = {
     labels: apiData.map(item => item.product_name),
     datasets: [{
-        label: 'درآمد کل',
-        data: apiData.map(item => item.total_revenue),
-        backgroundColor: '#4299E1',
+      label: 'درآمد کل',
+      data: apiData.map(item => item.total_revenue),
+      // 2. استفاده از متغیر برای رنگ میله‌ها
+      backgroundColor: accentColor,
     }],
   };
 
@@ -49,11 +59,11 @@ const TopProductsChart = () => {
     plugins: { 
       legend: { display: false },
       title: { display: false },
-       tooltip: {
+      tooltip: {
         callbacks: {
           label: function (context) {
             const label = context.dataset.label || '';
-            const value = context.parsed.x; // در نمودار میله‌ای افقی، مقدار روی محور x است
+            const value = context.parsed.x;
             return `${label}: ${value.toLocaleString('fa-IR')}`;
           }
         }
@@ -62,8 +72,8 @@ const TopProductsChart = () => {
     scales: { 
       y: { 
         ticks: { 
-          color: '#A0AEC0',
-          // این تابع لیبل‌های محور عمودی (اسامی محصولات) را برمی‌گرداند
+          // 3. استفاده از متغیر برای رنگ لیبل‌های محور
+          color: textSecondaryColor,
           callback: function(value, index, ticks) {
             return this.getLabelForValue(value);
           }
@@ -71,8 +81,8 @@ const TopProductsChart = () => {
       }, 
       x: { 
         ticks: { 
-          color: '#A0AEC0',
-          // **تغییر اصلی اینجاست**: این تابع اعداد محور افقی را فارسی می‌کند
+          // 4. استفاده از متغیر برای رنگ لیبل‌های محور
+          color: textSecondaryColor,
           callback: function (value) {
             return value.toLocaleString('fa-IR');
           }

@@ -8,13 +8,13 @@
 }
 
 :root {
-  --primary-bg: #1A202C;
-  --secondary-bg: #2D3748;
-  --card-bg: #4A5568;
-  --text-primary: #EDF2F7;
-  --text-secondary: #A0AEC0;
-  --accent-color: #38A169; /* سبز زمردی */
-  --accent-hover: #2F855A;
+  --primary-bg: #E9ECF1;
+  --secondary-bg: #F1F6F9;
+  --card-bg: #E9ECF1;
+  --text-primary: #394867;
+  --text-secondary: #67738B;
+  --accent-color: #048F2F;
+  --accent-hover: #C6A83A;
 }
 
 * {

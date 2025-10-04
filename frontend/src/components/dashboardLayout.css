@@ -6,14 +6,14 @@
 .main-content {
   flex-grow: 1;
   padding: 2rem;
-  margin-right: 240px; /* به اندازه عرض سایدبار */
+  margin-right: 200px; /* به اندازه عرض سایدبار */
 }
 
 /* =================================== */
 /* استایل‌های منوی کناری (Sidebar) */
 /* =================================== */
 .sidebar {
-  width: 240px;
+  width: 200px;
   background-color: var(--secondary-bg);
   padding: 1.5rem;
   position: fixed;
@@ -58,7 +58,7 @@
 /* رنگی کردن آیکون در زمان هاور */
 .sidebar nav a:hover svg,
 .logout-link:hover svg {
-  color: var(--accent-color); /* آیکون به رنگ سبز درمی‌آید */
+  color: var(--accent-hover); /* آیکون به رنگ سبز درمی‌آید */
 }
 
 .sidebar svg {
@@ -124,7 +124,7 @@
 /* استایل آیتم فعال در سایدبار دسکتاپ */
 .sidebar nav a.active {
   background-color: var(--card-bg);
-  color: var(--accent-color); /* متن و آیکون سبز می‌شوند */
+  color: var(--accent-hover); /* متن و آیکون سبز می‌شوند */
 }
 
 /* استایل آیتم فعال در منوی پایین موبایل */

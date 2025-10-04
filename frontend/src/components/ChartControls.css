@@ -26,7 +26,6 @@
 .control-button.active {
   background-color: var(--secondary-bg);
   color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* استایل‌های واکنش‌گرا برای موبایل */

@@ -17,6 +17,17 @@ const SalesTrendChart = () => {
   const [loading, setLoading] = useState(true);
   const { width } = useWindowSize();
 
+  // ====================  تغییر از اینجا شروع میشه ====================
+
+  // 1. خوندن متغیرهای رنگ از :root
+  const rootStyles = getComputedStyle(document.documentElement);
+  const accentColor = rootStyles.getPropertyValue('--accent-color').trim();
+  const accentHoverColor = rootStyles.getPropertyValue('--accent-hover').trim();
+  const textPrimaryColor = rootStyles.getPropertyValue('--text-primary').trim();
+  const textSecondaryColor = rootStyles.getPropertyValue('--text-secondary').trim();
+
+  // =================================================================
+
   const METRIC_OPTIONS = [
     { label: 'درآمد', value: 'total_revenue' },
     { label: 'تعداد', value: 'sales_count' },
@@ -42,41 +53,47 @@ const SalesTrendChart = () => {
     fetchData();
   }, [period]);
 
-    useEffect(() => {
-        if (!apiData.length && !loading) {
-            setChartConfig({ labels: [], datasets: [] });
-            return;
-        };
-        const labels = apiData.map(item => item.invoice_timestamp);
-        const isRevenue = metric === 'total_revenue';
-        setChartConfig({
-            labels: labels,
-            datasets: [{
-                label: isRevenue ? 'درآمد کل' : 'تعداد فروش',
-                data: apiData.map(item => item[metric]),
-                borderColor: isRevenue ? '#38A169' : '#3182CE',
-                backgroundColor: isRevenue ? 'rgba(56, 161, 105, 0.2)' : 'rgba(49, 130, 206, 0.2)',
-                fill: true,
-                tension: 0.3,
-            }],
-        });
-    }, [apiData, metric, loading]);
-  
+  useEffect(() => {
+    if (!apiData.length && !loading) {
+      setChartConfig({ labels: [], datasets: [] });
+      return;
+    };
+    const labels = apiData.map(item => item.invoice_timestamp);
+    const isRevenue = metric === 'total_revenue';
+    setChartConfig({
+      labels: labels,
+      datasets: [{
+        label: isRevenue ? 'درآمد کل' : 'تعداد فروش',
+        data: apiData.map(item => item[metric]),
+        // 2. استفاده از متغیرهای خونده شده
+        borderColor: isRevenue ? accentColor : accentHoverColor,
+        // نکته: برای شفافیت، دو رقم هگز به انتهای کد رنگ اضافه میکنیم (مثلا '33' برای 20% شفافیت)
+        backgroundColor: isRevenue ? `${accentColor}33` : `${accentHoverColor}33`,
+        fill: true,
+        tension: 0.3,
+      }],
+    });
+  }, [apiData, metric, loading, accentColor, accentHoverColor]); // متغیرهای رنگ رو به وابستگی‌ها اضافه می‌کنیم
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { color: '#EDF2F7' } },
+      legend: {
+        labels: {
+          // 3. استفاده از متغیر برای رنگ متن
+          color: textPrimaryColor
+        }
+      },
       title: { display: false },
       tooltip: {
         callbacks: {
-          title: function (tooltipItems) {
+          title: function(tooltipItems) {
             return `تاریخ: ${tooltipItems[0].label}`;
           },
-          label: function (context) {
+          label: function(context) {
             const label = context.dataset.label || '';
             const value = context.parsed.y;
-            // اعداد داخل تولتیپ هم فارسی میشن
             return `${label}: ${value.toLocaleString('fa-IR')}`;
           }
         }
@@ -86,20 +103,18 @@ const SalesTrendChart = () => {
       y: {
         beginAtZero: true,
         ticks: {
-          color: '#A0AEC0',
-          // این تابع اعداد محور عمودی را فارسی می‌کند
-          callback: function (value) {
+          // 4. استفاده از متغیر برای رنگ اعداد محور
+          color: textSecondaryColor,
+          callback: function(value) {
             return value.toLocaleString('fa-IR');
           }
         }
       },
       x: {
         ticks: {
-          color: '#A0AEC0',
-          // **تغییر اصلی اینجاست**: این تابع اعداد محور افقی را فارسی می‌کند
-          // (برای مواقعی که لیبل‌ها عدد باشند)
+          // 5. استفاده از متغیر برای رنگ اعداد محور
+          color: textSecondaryColor,
           callback: function(value, index, ticks) {
-            // this.getLabelForValue(value) لیبل اصلی را برمی‌گرداند
             return this.getLabelForValue(value).toLocaleString('fa-IR');
           }
         }
