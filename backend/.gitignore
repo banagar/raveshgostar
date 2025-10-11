@@ -1,0 +1,33 @@
+# =========================================
+# Python section
+# =========================================
+
+# Virtual Environment
+/venv
+/.venv
+/env/
+/env.bak/
+/venv.bak/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite Database
+# فایل دیتابیس رو اضافه کن تا به گیت‌هاب فرستاده نشه.
+# اگه می‌خوای ساختار اولیه دیتابیس رو داشته باشی، این خط رو کامنت کن.
+*.sqlite3
+*.db
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.*
+
+# Model files
+*.safetensors
